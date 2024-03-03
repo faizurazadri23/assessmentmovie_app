@@ -1,6 +1,7 @@
 package com.faizura.movie.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -72,7 +73,8 @@ class DetailMoviesActivity : AppCompatActivity() {
             if (result != null) {
                 when (result) {
                     is ResultProcess.Loading -> {
-
+                        detailMoviesBinding.layoutData.visibility = View.GONE
+                        detailMoviesBinding.shimmerDetailMovie.visibility = View.VISIBLE
                     }
 
                     is ResultProcess.Success -> {
@@ -96,10 +98,14 @@ class DetailMoviesActivity : AppCompatActivity() {
                         detailMoviesBinding.isAdult.text = isAdult
                         detailMoviesBinding.genre.text = genreStr
                         detailMoviesBinding.popularity.text = result.data.popularity.toString()
+
+                        detailMoviesBinding.layoutData.visibility = View.VISIBLE
+                        detailMoviesBinding.shimmerDetailMovie.visibility = View.GONE
                     }
 
                     is ResultProcess.Error -> {
-
+                        detailMoviesBinding.layoutData.visibility = View.GONE
+                        detailMoviesBinding.shimmerDetailMovie.visibility = View.VISIBLE
                     }
                 }
             }
