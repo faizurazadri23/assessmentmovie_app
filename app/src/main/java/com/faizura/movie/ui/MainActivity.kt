@@ -2,6 +2,8 @@ package com.faizura.movie.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +26,13 @@ class MainActivity : AppCompatActivity(), AdapterGenreMovies.SetOnClickGenre {
         setContentView(mainBinding.root)
 
         mainBinding.rvGenre.layoutManager = LinearLayoutManager(this)
+
+        mainBinding.swipeRefresh.setOnRefreshListener {
+            Handler(Looper.getMainLooper()).postDelayed({
+                mainBinding.swipeRefresh.isRefreshing = false
+                loadGenreMovies()
+            }, 4000)
+        }
 
         loadGenreMovies()
     }
