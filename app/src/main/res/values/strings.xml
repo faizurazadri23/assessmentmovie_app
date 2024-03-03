@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">movie_app</string>
+    <string name="movie_app">Movie App</string>
+    <string name="title_movies">Movies</string>
+    <string name="title_tv">Tv</string>
+    <string name="genre_name">Genre Name</string>
+    <string name="movies_poster">Movies Poster</string>
+    <string name="list_movie_by_genre">List Movie by Genre</string>
+    <string name="genre">Genre</string>
+    <string name="adult">Adult</string>
+    <string name="durasi">Durasi</string>
+    <string name="kepopuleran">Kepopuleran</string>
+    <string name="reviews">Reviews</string>
+    <string name="overview">OverView</string>
+</resources>
