@@ -2,6 +2,8 @@ package com.faizura.movie.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.faizura.movie.data.source.model.Movies
 import com.faizura.movie.data.source.model.ReviewMovie
@@ -9,9 +11,9 @@ import com.faizura.movie.databinding.ItemReviewMovieBinding
 import java.text.SimpleDateFormat
 
 class AdapterReviewMovie(
-    private val listReviewMovie: List<ReviewMovie>,
+
     private val movies: Movies,
-) : RecyclerView.Adapter<AdapterReviewMovie.ListViewReviewMovies>() {
+) : PagingDataAdapter<ReviewMovie, AdapterReviewMovie.ListViewReviewMovies>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewReviewMovies {
         val itemReviewMovieBinding =
@@ -20,10 +22,12 @@ class AdapterReviewMovie(
     }
 
     override fun onBindViewHolder(holder: ListViewReviewMovies, position: Int) {
-        holder.bind(listReviewMovie[position], movies)
+        val data = getItem(position)
+        if (data != null) {
+            holder.bind(data, movies)
+        }
     }
 
-    override fun getItemCount(): Int = listReviewMovie.size
 
     inner class ListViewReviewMovies(private val itemReviewMovieBinding: ItemReviewMovieBinding) :
         RecyclerView.ViewHolder(itemReviewMovieBinding.root) {
@@ -39,6 +43,18 @@ class AdapterReviewMovie(
                 descriptionReview.text = "Written by ${reviewMovie.author} on ${formattedDate}"
                 review.text = reviewMovie.content
 
+            }
+        }
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ReviewMovie>() {
+            override fun areItemsTheSame(oldItem: ReviewMovie, newItem: ReviewMovie): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: ReviewMovie, newItem: ReviewMovie): Boolean {
+                return oldItem.id == newItem.id
             }
         }
     }

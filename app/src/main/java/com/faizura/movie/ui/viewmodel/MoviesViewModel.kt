@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.faizura.movie.data.source.ReviewMovieResponse
 import com.faizura.movie.data.source.model.Movies
+import com.faizura.movie.data.source.model.ReviewMovie
 import com.faizura.movie.data.source.repository.MoviesRepository
 import com.faizura.movie.data.source.repository.ResultProcess
 import com.faizura.movie.data.source.response.DetailMovieResponse
@@ -31,8 +31,8 @@ class MoviesViewModel(private val moviesRepository: MoviesRepository) : ViewMode
         return moviesRepository.detailMovies(movieId)
     }
 
-    fun reviewMovie(movieId: Int, page: Int): LiveData<ResultProcess<ReviewMovieResponse>> {
-        return moviesRepository.reviewMovie(movieId, page)
+    fun reviewMovie(movieId: Int, page: Int): LiveData<PagingData<ReviewMovie>> {
+        return moviesRepository.reviewMovie(movieId, page).cachedIn(viewModelScope)
     }
 
 }

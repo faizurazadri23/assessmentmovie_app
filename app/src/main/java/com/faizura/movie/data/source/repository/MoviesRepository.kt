@@ -9,9 +9,10 @@ import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.faizura.movie.BuildConfig
 import com.faizura.movie.api.ApiConfig
-import com.faizura.movie.data.source.ReviewMovieResponse
 import com.faizura.movie.data.source.datasource.MoviePagingSource
+import com.faizura.movie.data.source.datasource.ReviewPagingSource
 import com.faizura.movie.data.source.model.Movies
+import com.faizura.movie.data.source.model.ReviewMovie
 import com.faizura.movie.data.source.response.DetailMovieResponse
 import com.faizura.movie.data.source.response.GenreMovieResponse
 import com.faizura.movie.data.source.response.VideoMovieResponse
@@ -78,16 +79,14 @@ class MoviesRepository(private val apiConfig: ApiConfig) {
     fun reviewMovie(
         movieId: Int,
         page: Int
-    ): LiveData<ResultProcess<ReviewMovieResponse>> = liveData {
-        emit(ResultProcess.Loading)
-
-        try {
-            val response = apiConfig.getApiService()
-                .reviewMovie("Bearer ${BuildConfig.AUTH_KEY}", movieId, "en-US", page)
-            emit(ResultProcess.Success(response))
-        } catch (e: Exception) {
-            Log.e("Movies : ", "Onfailure " + e.message.toString())
-            emit(ResultProcess.Error(e.message.toString()))
-        }
+    ): LiveData<PagingData<ReviewMovie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                ReviewPagingSource(apiConfig, movieId, page)
+            }
+        ).liveData
     }
 }

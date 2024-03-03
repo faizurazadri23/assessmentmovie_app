@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.faizura.movie.BuildConfig
 import com.faizura.movie.adapter.AdapterReviewMovie
+import com.faizura.movie.adapter.LoadingStateAdapter
 import com.faizura.movie.data.source.model.Movies
 import com.faizura.movie.data.source.repository.ResultProcess
 import com.faizura.movie.databinding.ActivityDetailMoviesBinding
@@ -106,24 +107,16 @@ class DetailMoviesActivity : AppCompatActivity() {
     }
 
     private fun loadReviewMovie(movieId: Int) {
-        moviesViewModel.reviewMovie(movieId, 1).observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is ResultProcess.Loading -> {
 
-                    }
+        val adapterReviewMovie = AdapterReviewMovie(movies)
+        detailMoviesBinding.rvReviewMovie.adapter =
+            adapterReviewMovie.withLoadStateFooter(footer = LoadingStateAdapter {
+                adapterReviewMovie.retry()
+            })
 
-                    is ResultProcess.Success -> {
-                        val adapterReview = AdapterReviewMovie(result.data.results, movies)
-                        adapterReview.notifyDataSetChanged()
-                        detailMoviesBinding.rvReviewMovie.adapter = adapterReview
-                    }
 
-                    is ResultProcess.Error -> {
-
-                    }
-                }
-            }
+        moviesViewModel.reviewMovie(movieId, 1).observe(this) {
+            adapterReviewMovie.submitData(lifecycle, it)
         }
     }
 
