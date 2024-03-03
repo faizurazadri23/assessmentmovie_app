@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.faizura.movie.R
 import com.faizura.movie.adapter.AdapterMovies
+import com.faizura.movie.adapter.LoadingStateAdapter
 import com.faizura.movie.data.source.model.Movies
-import com.faizura.movie.data.source.repository.ResultProcess
 import com.faizura.movie.databinding.ActivityMoviesBinding
 import com.faizura.movie.ui.viewmodel.MoviesViewModel
 import com.faizura.movie.viewmodel.ViewModelFactoryMovies
@@ -38,25 +38,14 @@ class MoviesActivity : AppCompatActivity(), AdapterMovies.SetOnClickMovies {
     }
 
     private fun loadMovies() {
-        moviesViewModel.movies(1, genredId).observe(this) { result ->
-            if (result != null) {
-                when (result) {
-                    is ResultProcess.Loading -> {
+        val adapterMovies = AdapterMovies(this)
+        moviesBinding.rvMovies.adapter =
+            adapterMovies.withLoadStateFooter(footer = LoadingStateAdapter {
+                adapterMovies.retry()
+            })
 
-                    }
-
-                    is ResultProcess.Success -> {
-
-                        val adapterMovies = AdapterMovies(result.data.results, this)
-                        adapterMovies.notifyDataSetChanged()
-                        moviesBinding.rvMovies.adapter = adapterMovies
-                    }
-
-                    is ResultProcess.Error -> {
-
-                    }
-                }
-            }
+        moviesViewModel.movies(1, genredId).observe(this) {
+            adapterMovies.submitData(lifecycle, it)
         }
     }
 

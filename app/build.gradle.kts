@@ -67,4 +67,5 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 }

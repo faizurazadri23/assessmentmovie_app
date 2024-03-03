@@ -10,4 +10,6 @@
     <string name="kepopuleran">Kepopuleran</string>
     <string name="reviews">Reviews</string>
     <string name="overview">OverView</string>
+    <string name="muat_ulang">Muat Ulang</string>
+    <string name="timeout">TimeOut</string>
 </resources>

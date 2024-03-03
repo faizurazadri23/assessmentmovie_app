@@ -2,6 +2,8 @@ package com.faizura.movie.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.faizura.movie.BuildConfig
@@ -9,9 +11,8 @@ import com.faizura.movie.data.source.model.Movies
 import com.faizura.movie.databinding.ItemMoviesBinding
 
 class AdapterMovies(
-    private val listMovies: List<Movies>,
     private val setOnClickMovies: SetOnClickMovies
-) : RecyclerView.Adapter<AdapterMovies.ListViewMovies>() {
+) : PagingDataAdapter<Movies, AdapterMovies.ListViewMovies>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewMovies {
         val itemMoviesBinding =
@@ -20,10 +21,11 @@ class AdapterMovies(
     }
 
     override fun onBindViewHolder(holder: ListViewMovies, position: Int) {
-        holder.bind(listMovies[position])
+        val data = getItem(position)
+        if (data!=null){
+            holder.bind(data)
+        }
     }
-
-    override fun getItemCount(): Int = listMovies.size
 
     inner class ListViewMovies(private val itemMoviesBinding: ItemMoviesBinding) :
         RecyclerView.ViewHolder(itemMoviesBinding.root) {
@@ -42,5 +44,17 @@ class AdapterMovies(
 
     interface SetOnClickMovies {
         fun onClickMovies(movies: Movies)
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movies>() {
+            override fun areItemsTheSame(oldItem: Movies, newItem: Movies): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Movies, newItem: Movies): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
     }
 }
